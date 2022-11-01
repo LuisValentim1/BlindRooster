@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Classe para posição, não está associado a nenhum game object é só para poder guardar informação das jogadas numa estrutura com tudo o que é necessário 
+// Tem uma coordenada x, uma coordenada y, quem jogou e quais as coordenadas adjacentes
+// As coordenadas adjacentes servem para calcular sequencias de posições, para verificar vitórias 
+
 public class Position : MonoBehaviour
 {
 
@@ -25,6 +29,7 @@ public class Position : MonoBehaviour
         consecutiveYs = new int[3]{y-1, y, y+1};
     }
 
+    //Não está a ser utilizado
     public bool Equals(Position p){
         if(this.x == p.x && this.y == p.y){
             return true;
@@ -34,6 +39,7 @@ public class Position : MonoBehaviour
         } 
     }
 
+    //Verificar se uma coordenada é adjacente no eixo do x
     public bool ConseqX(int x){
         foreach(int i in consecutiveXs){
             if(x==i){
@@ -43,6 +49,7 @@ public class Position : MonoBehaviour
         return false;
     }
 
+    //Verificar se uma coordenada é adjacente no eixo do y
     public bool ConseqY(int y){
         foreach(int i in consecutiveYs){
             if(y==i){
@@ -52,6 +59,7 @@ public class Position : MonoBehaviour
         return false;
     }
 
+    //Verificar se uma posição é verdadeiramente consecutiva a outro ponto 
     public bool IsConsecutive(Position p){
         //print("xy" + x.ToString() + y.ToString() + "pxy" + p.x.ToString() + p.y.ToString());
         //print(!( (p.x == x) && (p.y ==y) ));
@@ -61,10 +69,14 @@ public class Position : MonoBehaviour
         return false;
     }
 
+    // Debug tool
     public string ToString(){
         return x.ToString() + y.ToString();
     }
 
+    // Verificar se houve uma vitória através de duas posições e uma lista de posições, se existir na lista uma posição
+    // que possui o mesmo declive em relação à segunda, que a segunda tem em relação à primeira, então são uma sequencia de 3
+    // Utilizado para verificar vitória 
     public bool CheckWin(Position p2, List<Position> pList){
         //print("we checkin");
         foreach(Position p3 in pList){

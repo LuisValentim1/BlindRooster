@@ -4,18 +4,18 @@ using UnityEngine;
 using System;
 using System.Linq;
 
+//Esta classe tem um bocado de esparguete mas funciona com a estrutura atual, pode dar jeito reestruturar no futuro, força 
+
 public class Game : MonoBehaviour
 {
     public int difficulty;
-    public Position[] slots;
-    public int playerTurn;
+    public Position[] slots;   //posições que já foram chamadas este jogo 
+    public int playerTurn;     
     public int slotCounter;
-    public List<Position> p1Slots;
-    public List<Position> p2Slots;
-
-    //public Position playedPositions;
-    // Start is called before the first frame update
+    public List<Position> p1Slots;   //só posições do jogador1 
+    public List<Position> p2Slots;   //só posições do jogador2
     
+    //Verificar a dificuldade do jogo e setup apropriado 
     public void StartGame()
     {
         this.transform.GetChild(difficulty).gameObject.SetActive(true);
@@ -23,6 +23,7 @@ public class Game : MonoBehaviour
         slotCounter = 0;
     }
 
+    //fazer uma jogada, associado aos butões que constituem o campo 
     public void SetPlay(string position){
         int positionX = (int)char.GetNumericValue(position[0]);
         int positionY = (int)char.GetNumericValue(position[1]);
@@ -31,7 +32,7 @@ public class Game : MonoBehaviour
         print("player" + (playerTurn +1).ToString() + " played " + position );
         if(playerTurn == 0){
             p1Slots.Add(new Position(positionX, positionY, playerTurn));
-            print(p1Slots.Count);
+            //print(p1Slots.Count);
             CheckWinner(p1Slots);
             playerTurn++;
         }
@@ -42,6 +43,11 @@ public class Game : MonoBehaviour
         }
     }
 
+    // Verificar quem ganhou através de funções para testar consecutividade que estão no Position.cs
+    // 0 - ganhou o jogador 1
+    // 1 - ganhou o jogador 2
+    // 2 - empate
+    // 3 - o jogo ainda não está decidido 
     public int CheckWinner(List<Position> pSlots){
         foreach(Position p in pSlots){
             //print("with:" + pSlots.Count.ToString());
