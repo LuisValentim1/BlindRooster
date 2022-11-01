@@ -13,6 +13,7 @@ public class GeneralManager : MonoBehaviour
     public GameObject roomNumberDisplay;
     public GameObject joinCodeInbox;
     public GameObject difficultySlider;
+    public GameObject game;
     public int difficulty;
     public int roomCode;
 
@@ -26,6 +27,11 @@ public class GeneralManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void StartGame(){
+        game.GetComponent<Game>().SetDifficulty(difficulty);
+        game.GetComponent<Game>().Start();
     }
 
     public void StartMenuUIOff(){
@@ -55,13 +61,16 @@ public class GeneralManager : MonoBehaviour
         difficulty = (int)difficultySlider.GetComponent<Slider>().value;
         StartMenuUIOff();
         GameUIOn();
+        StartGame();
         print(roomCode);
     }
 
     public void JoinRoom(){
         roomCode = GetCode();
+        difficulty = 0;
         StartMenuUIOff();
         GameUIOn();
+        StartGame();
         print(roomCode);
     }
 }
