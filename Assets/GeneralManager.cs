@@ -31,7 +31,7 @@ public class GeneralManager : MonoBehaviour
 
     public void StartGame(){
         game.GetComponent<Game>().SetDifficulty(difficulty);
-        game.GetComponent<Game>().Start();
+        game.GetComponent<Game>().StartGame();
     }
 
     public void StartMenuUIOff(){

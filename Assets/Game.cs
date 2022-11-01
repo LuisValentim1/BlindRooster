@@ -16,18 +16,22 @@ public class Game : MonoBehaviour
     //public Position playedPositions;
     // Start is called before the first frame update
     
-    public void Start()
+    public void StartGame()
     {
         this.transform.GetChild(difficulty).gameObject.SetActive(true);
         slots = new Position[(int)Math.Pow((difficulty+3),2)];
         slotCounter = 0;
     }
 
-    public void Play(int positionX, int positionY){
+    public void SetPlay(string position){
+        int positionX = (int)char.GetNumericValue(position[0]);
+        int positionY = (int)char.GetNumericValue(position[1]);
         slots[slotCounter] = new Position(positionX, positionY, playerTurn);
         slotCounter++;
+        print("player" + (playerTurn +1).ToString() + " played " + position );
         if(playerTurn == 0){
             p1Slots.Add(new Position(positionX, positionY, playerTurn));
+            print(p1Slots.Count);
             CheckWinner(p1Slots);
             playerTurn++;
         }
@@ -40,20 +44,12 @@ public class Game : MonoBehaviour
 
     public int CheckWinner(List<Position> pSlots){
         foreach(Position p in pSlots){
-            List<Position> pList = new List<Position>{p};
-            List<Position> withoutP1 = p1Slots.Except(pList).ToList();
-            if(withoutP1.Count > 0){
-                foreach(Position p2 in withoutP1){
-                    if(p.IsConsecutive(p2)){
-                        List<Position> p2List = new List<Position>{p2};
-                        List<Position> withoutP2 = p1Slots.Except(p2List).ToList();
-                        if(withoutP2.Count >0){
-                            foreach(Position p3 in withoutP2){
-                                if(p2.IsConsecutive(p3)){
-                                    return playerTurn;
-                                }
-                            }
-                        }
+            //print("with:" + pSlots.Count.ToString());
+            foreach(Position p2 in pSlots){
+                if(p.IsConsecutive(p2)){
+                    if(p.CheckWin(p2, pSlots)){
+                        print("player" + (playerTurn+1).ToString() + " won!");
+                        return playerTurn;
                     }
                 }
             }
