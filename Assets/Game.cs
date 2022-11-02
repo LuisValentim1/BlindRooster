@@ -40,16 +40,39 @@ public class Game : MonoBehaviour
             playerChange = "X";
             p1Slots.Add(new Position(positionX, positionY, playerTurn));
             //print(p1Slots.Count);
+            CheckPositionEqual(p1Slots, p2Slots);
             CheckWinner(p1Slots);
             playerTurn++;
             StartCoroutine(TimeToWaitBeforePlay());
+            //if(p1Slots.SequenceEqual(p2Slots))
+            //{
+            //    Debug.Log("Perdeu");
+            //}
         }
         else{
             playerChange = "O";
             p2Slots.Add(new Position(positionX, positionY, playerTurn));
+            CheckPositionEqual(p2Slots, p1Slots);
             CheckWinner(p2Slots);
             playerTurn--;
             StartCoroutine(TimeToWaitBeforePlay());
+        }
+    }
+
+    public void CheckPositionEqual(List<Position> pSlots, List<Position> pSlots2)
+    {
+        foreach (Position p in pSlots)
+        {
+            //print("with:" + pSlots.Count.ToString());
+            foreach (Position p2 in pSlots2)
+            {
+                if (p.Equals(p2))
+                {
+                   // print("player" + (playerTurn + 1).ToString() + " won!");
+                    winPanel.SetActive(true);
+                    winText.text = "Player" + (playerTurn + 1).ToString() + " Lose!";
+                }
+            }
         }
     }
 
@@ -90,8 +113,15 @@ public class Game : MonoBehaviour
     {
         canvas.blocksRaycasts = false;
         //Wait for 3 seconds
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
         canvas.blocksRaycasts = true;
+    }
+
+    public void RestartGame()
+    {
+        p1Slots.Clear();
+        p2Slots.Clear();
+        playerTurn = 0;
     }
 
     // Update is called once per frame

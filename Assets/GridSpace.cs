@@ -19,15 +19,15 @@ public class GridSpace : MonoBehaviour
     public void SetPlayerSide()
     {
         playerSideText.text = game.playerChange;
-        slotSpace.interactable = false;
+        //slotSpace.interactable = false;
         StartCoroutine(Waiter());
     }
 
     //Tempo que a jogada aparece no ecrã
     IEnumerator Waiter()
     { 
-        //Wait for 3 seconds
-        yield return new WaitForSeconds(3);
-        playerSideText.gameObject.SetActive(false);
+        //Wait for 1 seconds
+        yield return new WaitForSeconds(1);
+        playerSideText.text = "";
     }
 }
