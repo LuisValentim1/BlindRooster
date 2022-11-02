@@ -20,6 +20,7 @@ public class Game : MonoBehaviour
     public CanvasGroup canvas;
     public GameObject winPanel;
     public TMP_Text winText;
+    public GameObject[] grids;
 
     //Verificar a dificuldade do jogo e setup apropriado 
     public void StartGame()
@@ -40,23 +41,48 @@ public class Game : MonoBehaviour
             playerChange = "X";
             p1Slots.Add(new Position(positionX, positionY, playerTurn));
             //print(p1Slots.Count);
+           // CheckPositionEqualinOneList(p1Slots);
             CheckPositionEqual(p1Slots, p2Slots);
             CheckWinner(p1Slots);
             playerTurn++;
             StartCoroutine(TimeToWaitBeforePlay());
-            //if(p1Slots.SequenceEqual(p2Slots))
-            //{
-            //    Debug.Log("Perdeu");
-            //}
         }
         else{
             playerChange = "O";
             p2Slots.Add(new Position(positionX, positionY, playerTurn));
             CheckPositionEqual(p2Slots, p1Slots);
+          //  CheckPositionEqualinOneList(p2Slots);
             CheckWinner(p2Slots);
             playerTurn--;
             StartCoroutine(TimeToWaitBeforePlay());
         }
+    }
+
+    public void CheckPositionEqualinOneList(List<Position> pSlots)
+    {
+        //var item = p1Slots[^1];
+        //var item2 = p2Slots[^1];
+        var lastPosition = pSlots[^1];
+
+        foreach (Position p in pSlots)
+        {
+            if (p == lastPosition)
+            {
+                
+                winPanel.SetActive(true);
+                winText.text = "Player" + (playerTurn + 1).ToString() + " Lose!";
+            }
+        }
+
+        //foreach (Position p in pSlots)
+        //{
+        //    if (p.Equals(p))
+        //    {
+        //        // print("player" + (playerTurn + 1).ToString() + " won!");
+        //        winPanel.SetActive(true);
+        //        winText.text = "Player" + (playerTurn + 1).ToString() + " Lose!";
+        //    }
+        //}
     }
 
     public void CheckPositionEqual(List<Position> pSlots, List<Position> pSlots2)
@@ -122,6 +148,10 @@ public class Game : MonoBehaviour
         p1Slots.Clear();
         p2Slots.Clear();
         playerTurn = 0;
+        for(int i=0; i < grids.Length; i++)
+        {
+            grids[i].SetActive(false);
+        }
     }
 
     // Update is called once per frame

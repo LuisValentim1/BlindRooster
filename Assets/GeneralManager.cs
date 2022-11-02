@@ -62,7 +62,7 @@ public class GeneralManager : MonoBehaviour
 
     public void CreateRoom(){
         roomCode = UnityEngine.Random.Range(0,1000);
-        difficulty = (int)difficultySlider.GetComponent<Slider>().value;
+        SetDifficulty(difficulty);
         StartMenuUIOff();
         GameUIOn();
         StartGame();
@@ -76,5 +76,10 @@ public class GeneralManager : MonoBehaviour
         GameUIOn();
         StartGame();
         print(roomCode);
+    }
+
+    public void SetDifficulty(int difficultyLevel)
+    {
+        difficulty = difficultyLevel;
     }
 }
