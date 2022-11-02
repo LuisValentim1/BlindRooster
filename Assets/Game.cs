@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
+using UnityEngine.UI;
+using TMPro;
 
 //Esta classe tem um bocado de esparguete mas funciona com a estrutura atual, pode dar jeito reestruturar no futuro, força 
 
@@ -14,7 +16,11 @@ public class Game : MonoBehaviour
     public int slotCounter;
     public List<Position> p1Slots;   //só posições do jogador1 
     public List<Position> p2Slots;   //só posições do jogador2
-    
+    public string playerChange; //string para guardar icon do jogador
+    public CanvasGroup canvas;
+    public GameObject winPanel;
+    public TMP_Text winText;
+
     //Verificar a dificuldade do jogo e setup apropriado 
     public void StartGame()
     {
@@ -31,15 +37,19 @@ public class Game : MonoBehaviour
         slotCounter++;
         print("player" + (playerTurn +1).ToString() + " played " + position );
         if(playerTurn == 0){
+            playerChange = "X";
             p1Slots.Add(new Position(positionX, positionY, playerTurn));
             //print(p1Slots.Count);
             CheckWinner(p1Slots);
             playerTurn++;
+            StartCoroutine(TimeToWaitBeforePlay());
         }
         else{
+            playerChange = "O";
             p2Slots.Add(new Position(positionX, positionY, playerTurn));
             CheckWinner(p2Slots);
             playerTurn--;
+            StartCoroutine(TimeToWaitBeforePlay());
         }
     }
 
@@ -55,12 +65,16 @@ public class Game : MonoBehaviour
                 if(p.IsConsecutive(p2)){
                     if(p.CheckWin(p2, pSlots)){
                         print("player" + (playerTurn+1).ToString() + " won!");
+                        winPanel.SetActive(true);
+                        winText.text = "Player" + (playerTurn + 1).ToString() + " won!";
                         return playerTurn;
                     }
                 }
             }
         }
         if(slotCounter == (int)Math.Pow((difficulty+3),2)){
+            winPanel.SetActive(true);
+            winText.text = "Empate!";
             return 2;
         }
         return 3;
@@ -68,6 +82,16 @@ public class Game : MonoBehaviour
 
     public void SetDifficulty(int dif){
         difficulty = dif;
+    }
+
+    //bloqueia o raycast durante 3 segundos para impedir que o segundo jogador jogue durante
+    //o tempo que tem para memorizar a jogada anterior
+    IEnumerator TimeToWaitBeforePlay()
+    {
+        canvas.blocksRaycasts = false;
+        //Wait for 3 seconds
+        yield return new WaitForSeconds(3);
+        canvas.blocksRaycasts = true;
     }
 
     // Update is called once per frame
