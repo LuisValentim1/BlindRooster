@@ -16,11 +16,13 @@ public class Game : MonoBehaviour
     public int slotCounter;
     public List<Position> p1Slots;   //só posições do jogador1 
     public List<Position> p2Slots;   //só posições do jogador2
+    public List<Position> verifyPosition;
     public string playerChange; //string para guardar icon do jogador
     public CanvasGroup canvas;
     public GameObject winPanel;
     public TMP_Text winText;
     public GameObject[] grids;
+   // private Position lastPosition = null;
 
     //Verificar a dificuldade do jogo e setup apropriado 
     public void StartGame()
@@ -35,13 +37,21 @@ public class Game : MonoBehaviour
         int positionX = (int)char.GetNumericValue(position[0]);
         int positionY = (int)char.GetNumericValue(position[1]);
         slots[slotCounter] = new Position(positionX, positionY, playerTurn);
+        verifyPosition.Add(new Position(positionX, positionY, playerTurn));
+
         slotCounter++;
         print("player" + (playerTurn +1).ToString() + " played " + position );
+
         if(playerTurn == 0){
+            if (p1Slots.Count > 0)
+            {
+                Debug.Log(p1Slots.Last());
+                Debug.Log(verifyPosition.Last());
+            }
             playerChange = "X";
+            //CheckPositionEqualinOneList(p1Slots);
             p1Slots.Add(new Position(positionX, positionY, playerTurn));
             //print(p1Slots.Count);
-           // CheckPositionEqualinOneList(p1Slots);
             CheckPositionEqual(p1Slots, p2Slots);
             CheckWinner(p1Slots);
             playerTurn++;
@@ -51,40 +61,35 @@ public class Game : MonoBehaviour
             playerChange = "O";
             p2Slots.Add(new Position(positionX, positionY, playerTurn));
             CheckPositionEqual(p2Slots, p1Slots);
-          //  CheckPositionEqualinOneList(p2Slots);
+           // CheckPositionEqualinOneList(p2Slots);
             CheckWinner(p2Slots);
             playerTurn--;
             StartCoroutine(TimeToWaitBeforePlay());
         }
     }
 
-    public void CheckPositionEqualinOneList(List<Position> pSlots)
-    {
-        //var item = p1Slots[^1];
-        //var item2 = p2Slots[^1];
-        var lastPosition = pSlots[^1];
+    //public void CheckPositionEqualinOneList(List<Position> pSlots)
+    //{
+    //    //if(pSlots.Count > 0)
+    //    //{
+    //    //    var lastPosition = pSlots[^1];
+    //    //    if (pSlots.Equals(lastPosition))
+    //    //    {
+    //    //        winPanel.SetActive(true);
+    //    //        winText.text = "Player" + (playerTurn + 1).ToString() + " Lose!";
+    //    //    }
+    //    //var lastPosition = pSlots[^1];
+    //    foreach (Position p in pSlots)
+    //        {
+    //                if (p.Equals(lastPosition))
+    //                {
+    //                    winPanel.SetActive(true);
+    //                    winText.text = "Player" + (playerTurn + 1).ToString() + " Lose!";
+    //                }
+    //        }
+    //}
 
-        foreach (Position p in pSlots)
-        {
-            if (p == lastPosition)
-            {
-                
-                winPanel.SetActive(true);
-                winText.text = "Player" + (playerTurn + 1).ToString() + " Lose!";
-            }
-        }
-
-        //foreach (Position p in pSlots)
-        //{
-        //    if (p.Equals(p))
-        //    {
-        //        // print("player" + (playerTurn + 1).ToString() + " won!");
-        //        winPanel.SetActive(true);
-        //        winText.text = "Player" + (playerTurn + 1).ToString() + " Lose!";
-        //    }
-        //}
-    }
-
+    //verificar se os jogadores jogam na mesma posição
     public void CheckPositionEqual(List<Position> pSlots, List<Position> pSlots2)
     {
         foreach (Position p in pSlots)
