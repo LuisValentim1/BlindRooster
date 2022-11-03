@@ -5,6 +5,10 @@ using UnityEngine.UI;
 using System.Collections;
 using System;
 
+
+//GeneralManager está a gerir tudo, UI, salas, jogo, mesmo à campeão, se quiserem separar em sistemas otimo mas acho que para um projeto deste tamanho não se justifica 
+//Provavelmente deveria existir uma classe Room que herdava parte da informação que está aqui, para isto funcionar em multiplayer.
+//As funções CreateRoom e JoinRoom estão ligadas a butões no Unity e iniciam o loop de jogo, acho que o resto do que está aqui é self explanatory mas qualquer dúvida perguntem 
 public class GeneralManager : MonoBehaviour
 {
 
@@ -13,6 +17,7 @@ public class GeneralManager : MonoBehaviour
     public GameObject roomNumberDisplay;
     public GameObject joinCodeInbox;
     public GameObject difficultySlider;
+    public GameObject game;
     public int difficulty;
     public int roomCode;
 
@@ -26,6 +31,11 @@ public class GeneralManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void StartGame(){
+        game.GetComponent<Game>().SetDifficulty(difficulty);
+        game.GetComponent<Game>().StartGame();
     }
 
     public void StartMenuUIOff(){
@@ -52,16 +62,24 @@ public class GeneralManager : MonoBehaviour
 
     public void CreateRoom(){
         roomCode = UnityEngine.Random.Range(0,1000);
-        difficulty = (int)difficultySlider.GetComponent<Slider>().value;
+        SetDifficulty(difficulty);
         StartMenuUIOff();
         GameUIOn();
+        StartGame();
         print(roomCode);
     }
 
     public void JoinRoom(){
         roomCode = GetCode();
+        difficulty = 0;
         StartMenuUIOff();
         GameUIOn();
+        StartGame();
         print(roomCode);
+    }
+
+    public void SetDifficulty(int difficultyLevel)
+    {
+        difficulty = difficultyLevel;
     }
 }
