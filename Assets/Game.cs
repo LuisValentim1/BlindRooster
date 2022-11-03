@@ -22,7 +22,11 @@ public class Game : MonoBehaviour
     public GameObject winPanel;
     public TMP_Text winText;
     public GameObject[] grids;
-   // private Position lastPosition = null;
+    public GameObject arrowPlayer1;
+    public GameObject arrowPlayer2;
+
+
+    // private Position lastPosition = null;
 
     //Verificar a dificuldade do jogo e setup apropriado 
     public void StartGame()
@@ -30,6 +34,7 @@ public class Game : MonoBehaviour
         this.transform.GetChild(difficulty).gameObject.SetActive(true);
         slots = new Position[(int)Math.Pow((difficulty+3),2)];
         slotCounter = 0;
+        arrowPlayer1.SetActive(true);
     }
 
     //fazer uma jogada, associado aos butões que constituem o campo 
@@ -45,6 +50,8 @@ public class Game : MonoBehaviour
         print("player" + (playerTurn +1).ToString() + " played " + position );
 
         if(playerTurn == 0){
+            arrowPlayer2.SetActive(true);
+            arrowPlayer1.SetActive(false);
             if (p1Slots.Count > 0)
             {
                 Debug.Log(p1Slots.Last());
@@ -60,6 +67,8 @@ public class Game : MonoBehaviour
             StartCoroutine(TimeToWaitBeforePlay());
         }
         else{
+            arrowPlayer1.SetActive(true);
+            arrowPlayer2.SetActive(false);
             playerChange = "O";
             p2Slots.Add(new Position(positionX, positionY, playerTurn));
             //CheckPositionEqual(p2Slots, p1Slots);
