@@ -36,8 +36,10 @@ public class Game : MonoBehaviour
     public void SetPlay(string position){
         int positionX = (int)char.GetNumericValue(position[0]);
         int positionY = (int)char.GetNumericValue(position[1]);
-        slots[slotCounter] = new Position(positionX, positionY, playerTurn);
-        verifyPosition.Add(new Position(positionX, positionY, playerTurn));
+        Position currentPos = new Position(positionX, positionY, playerTurn);
+        CheckLossByRepeat(currentPos);
+        slots[slotCounter] = currentPos;
+        verifyPosition.Add(currentPos);
 
         slotCounter++;
         print("player" + (playerTurn +1).ToString() + " played " + position );
@@ -52,7 +54,7 @@ public class Game : MonoBehaviour
             //CheckPositionEqualinOneList(p1Slots);
             p1Slots.Add(new Position(positionX, positionY, playerTurn));
             //print(p1Slots.Count);
-            CheckPositionEqual(p1Slots, p2Slots);
+            //CheckPositionEqual(p1Slots, p2Slots);
             CheckWinner(p1Slots);
             playerTurn++;
             StartCoroutine(TimeToWaitBeforePlay());
@@ -60,12 +62,13 @@ public class Game : MonoBehaviour
         else{
             playerChange = "O";
             p2Slots.Add(new Position(positionX, positionY, playerTurn));
-            CheckPositionEqual(p2Slots, p1Slots);
-           // CheckPositionEqualinOneList(p2Slots);
+            //CheckPositionEqual(p2Slots, p1Slots);
+            //CheckPositionEqualinOneList(p2Slots);
             CheckWinner(p2Slots);
             playerTurn--;
             StartCoroutine(TimeToWaitBeforePlay());
         }
+        print(slots);
     }
 
     //public void CheckPositionEqualinOneList(List<Position> pSlots)
@@ -102,6 +105,22 @@ public class Game : MonoBehaviour
                    // print("player" + (playerTurn + 1).ToString() + " won!");
                     winPanel.SetActive(true);
                     winText.text = "Player" + (playerTurn + 1).ToString() + " Lose!";
+                }
+            }
+        }
+    }
+
+    public void CheckLossByRepeat(Position cur){
+        foreach(Position p in verifyPosition){
+            if(cur.Equals(p)){
+                print("oi");
+                if(playerTurn == 0){
+                    winPanel.SetActive(true);
+                    winText.text = "Player2 won!";
+                }
+                else{
+                    winPanel.SetActive(true);
+                    winText.text = "Player1 won!";
                 }
             }
         }
@@ -152,6 +171,7 @@ public class Game : MonoBehaviour
     {
         p1Slots.Clear();
         p2Slots.Clear();
+        verifyPosition.Clear();
         playerTurn = 0;
         for(int i=0; i < grids.Length; i++)
         {

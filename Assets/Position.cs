@@ -31,6 +31,8 @@ public class Position : MonoBehaviour
 
     //Não está a ser utilizado
     public bool Equals(Position p){
+        print(this.x.ToString() + p.x.ToString());
+        print(this.y.ToString() + p.y.ToString());
         if(this.x == p.x && this.y == p.y){
             return true;
         }
